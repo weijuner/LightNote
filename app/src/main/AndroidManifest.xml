@@ -10,14 +10,22 @@
         <activity
             android:name=".ui.activity.LoginActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.MainActivity"></activity>
+        <activity android:name=".ui.activity.MainActivity" />
+        <activity
+            android:name=".ui.activity.AddNoteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_add_note"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
+        <activity android:name=".ui.activity.PersonalInfoActivity"></activity>
     </application>
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.mount_unmount_filesystems"></uses-permission>
 </manifest>

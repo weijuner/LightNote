@@ -9,5 +9,9 @@
     <color name="main_color">#2fc3f3</color>
     <color name="cube_mints_f1f1f1">#f1f1f1</color>
     <color name="accent_pressed">#1391d0</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="text_note_book">#333333</color>
+    <color name="popup_bg">#c3c0c0</color>
 
 </resources>

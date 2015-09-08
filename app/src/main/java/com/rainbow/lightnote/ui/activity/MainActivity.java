@@ -3,6 +3,7 @@ package com.rainbow.lightnote.ui.activity;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.ActionBar;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,8 +38,12 @@ import com.melnykov.fab.ScrollDirectionListener;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.rainbow.lightnote.R;
-import com.rainbow.lightnote.adapter.ListViewAdapter;
-import com.rainbow.lightnote.adapter.MainLvAdapter;
+import com.rainbow.lightnote.adapter.SlideMenuAdapter;
+import com.rainbow.lightnote.adapter.CategoryAdapter;
+import com.rainbow.lightnote.db.dao.NoteManager;
+import com.rainbow.lightnote.db.dao.UserManager;
+import com.rainbow.lightnote.model.Note;
+import com.rainbow.lightnote.model.User;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
 import com.yalantis.contextmenu.lib.MenuParams;
@@ -67,19 +72,24 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
     final String[] mStringList = {"LightNote", "Just Do It"};
     FloatingActionButton fab = null;
     private BGARefreshLayout mRefreshLayout;
+    private NoteManager noteManager;
+    private  List<Note> notes = new ArrayList<Note>();
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        UserManager userManager = new UserManager(this);
+        User user = new User("zeng","123456");
+        userManager.insertUser(user);
 
         setContentView(R.layout.activity_main);
-
         ActionBar ab = getActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setHomeButtonEnabled(true);
+        Log.e("MainActivity", ab.getHeight() + "");
         fragmentManager = getSupportFragmentManager();
         initMenuFragment();
-
+        initData();
         initView();
         initSlideMenu();
         initSwipeMenu();
@@ -87,35 +97,43 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         String[] values = new String[]{
             "所有笔记",
             "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "笔记分类",
-            "设置"
+            "设置", "关于"
         };
 
-        list.setAdapter(new ListViewAdapter(this, values));
-        mDrawerList.setAdapter(new MainLvAdapter(this, values));
+        String[] values2 = new String[]{
+                "所有笔记",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "笔记分类",
+                "设置"
+        };
+
+        list.setAdapter(new CategoryAdapter(this, notes));
+        mDrawerList.setAdapter(new SlideMenuAdapter(this, values));
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 switch (position) {
                     case 0:
+                        Intent intent = new Intent(MainActivity.this,PersonalInfoActivity.class);
+                        startActivity(intent);
                         break;
                     case 1:
                         break;
@@ -129,6 +147,13 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         initRightBottomMenu();
 
         initRefreshLayout(mRefreshLayout);
+    }
+
+    private void initData() {
+        Note note = new Note(1,"学习","我的笔记","这是内容","1994-03-12");
+        notes.add(note);
+        Note note2 = new Note(1,"生活","生活好难","这是内容","1995-03-12");
+        notes.add(note2);
     }
 
     /**
@@ -166,13 +191,29 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         SubActionButton btn_record = itemBuilder.setContentView(btn_record_icon).build();
 
         SubActionButton.Builder itemBuilder2 = new SubActionButton.Builder(this);
-        ImageView itemIcon2 = new ImageView(this);
-        itemIcon2.setImageDrawable(getResources().getDrawable(R.drawable.btn_add));
-        SubActionButton button2 = itemBuilder2.setContentView(itemIcon2).build();
+        ImageView btn_picture_icon = new ImageView(this);
+        btn_picture_icon.setImageDrawable(getResources().getDrawable(R.drawable.icn_picture));
+        SubActionButton btn_picture = itemBuilder2.setContentView(btn_picture_icon).build();
+
+        SubActionButton.Builder itemBuilder3 = new SubActionButton.Builder(this);
+        ImageView btn_text_icon = new ImageView(this);
+        btn_text_icon.setImageDrawable(getResources().getDrawable(R.drawable.icn_text));
+        SubActionButton btn_text = itemBuilder2.setContentView(btn_text_icon).build();
+
+        btn_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
 
         FloatingActionMenu rightLowerMenu = new FloatingActionMenu.Builder(this)
                 .addSubActionView(btn_record)
-                .addSubActionView(button2)
+                .addSubActionView(btn_picture)
+                .addSubActionView(btn_text)
                 .attachTo(fab)
                 .build();
 
@@ -197,6 +238,9 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         });
     }
 
+    /**
+     * listview滑动菜单
+     */
     private void initSwipeMenu() {
         SwipeMenuCreator creator = new SwipeMenuCreator() {
             @Override
@@ -239,6 +283,9 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         list.setMenuCreator(creator);
     }
 
+    /**
+     * 初始化滑动菜单
+     */
     private void initSlideMenu() {
         drawerArrow = new DrawerArrowDrawable(this) {
             @Override
@@ -264,6 +311,9 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         mDrawerToggle.syncState();
     }
 
+    /**
+     * 初始化控件
+     */
     private void initView() {
         mRefreshLayout = (BGARefreshLayout)findViewById(R.id.rl_modulename_refresh);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -272,7 +322,10 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         fab = (FloatingActionButton)findViewById(R.id.fab);
     }
 
-
+    /**
+     * 初始化下拉刷新
+     * @param refreshLayout
+     */
     private void initRefreshLayout(BGARefreshLayout refreshLayout) {
     //     为BGARefreshLayout设置代理
         mRefreshLayout.setDelegate(this);
@@ -333,37 +386,8 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         }
     }
 
-    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        // 在这里加载更多数据，或者更具产品需求实现上拉刷新也可以
-
-      /*  if (mIsNetworkEnabled) {
-            // 如果网络可用，则异步加载网络数据，并返回true，显示正在加载更多
-            new AsyncTask<Void, Void, Void>() {
-
-                @Override
-                protected Void doInBackground(Void... params) {
-                    try {
-                        Thread.sleep(MainActivity.LOADING_DURATION);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    // 加载完毕后在UI线程结束加载更多
-                    mRefreshLayout.endLoadingMore();
-                    mAdapter.addDatas(DataEngine.loadMoreData());
-                }
-            }.execute();
-
-            return true;
-        } else {
-            // 网络不可用，返回false，不显示正在加载更多
-            Toast.makeText(this, "网络不可用", Toast.LENGTH_SHORT).show();
-            return false;
-        }*/
+    @Override
+    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout bgaRefreshLayout) {
         return false;
     }
 
@@ -373,7 +397,9 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
     }
 
 
-
+    /**
+     * 初始化菜单fragment
+     */
     private void initMenuFragment() {
         MenuParams menuParams = new MenuParams();
         menuParams.setActionBarSize((int) getResources().getDimension(R.dimen.tool_bar_height));
