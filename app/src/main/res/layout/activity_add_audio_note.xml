@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tool_bar_height"
+        android:orientation="horizontal"
+        android:background="@color/main_color"
+        >
+        <ImageButton
+            android:id="@+id/img_btn_back"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/add_not_btn_margin"
+            android:background="@drawable/selector_addnote_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_centerInParent="true"
+            android:text="新笔记"
+            android:textSize="@dimen/title_bar_text"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageButton
+            android:id="@+id/img_btn_complete"
+            android:layout_marginRight="@dimen/add_not_btn_margin"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/selector_addnote_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <EditText
+        android:hint="笔记标题"
+        android:layout_margin="10dp"
+        android:textColor="@color/main_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            android:id="@+id/tv_notebook"
+            android:text="未命名笔记本"
+            android:layout_marginLeft="20dip"
+            android:textSize="15sp"
+            android:textColor="@color/text_note_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageButton
+            android:id="@+id/img_btn_tag"
+            android:layout_marginRight="20dip"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/img_btn_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="10dip"
+        android:background="@color/text_note_book"/>
+
+    <ImageView
+        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:id="@+id/img_recording_res"
+        android:visibility="invisible"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+        <Button
+            android:id="@+id/add_audio_note_button"
+            android:layout_height="64dp"
+            android:layout_width="64dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/selector_recording_voidce_btn"
+           />
+        </LinearLayout>
+
+
+
+</LinearLayout>

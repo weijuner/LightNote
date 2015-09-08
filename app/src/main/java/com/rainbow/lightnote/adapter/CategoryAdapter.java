@@ -6,11 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rainbow.lightnote.R;
 import com.rainbow.lightnote.model.Note;
 
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class CategoryAdapter extends BaseAdapter {
@@ -48,12 +51,38 @@ public class CategoryAdapter extends BaseAdapter {
             viewHolder.tv_note_time.setText(notes.get(position).getTime());
             viewHolder.tv_note_category = (TextView) convertView.findViewById(R.id.tv_note_category);
             viewHolder.tv_note_category.setText(notes.get(position).getCategory());
+            convertView.findViewById(R.id.btn_share_menu).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Star", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            convertView.findViewById(R.id.btn_trash_menu).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Are you sure?")
+                            .setContentText("删除这么珍贵的东西!")
+                            .setConfirmText("Yes,delete it!")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog
+                                            .setTitleText("Deleted!")
+                                            .setContentText("坏记忆跑掉啦!")
+                                            .setConfirmText("OK")
+                                            .setConfirmClickListener(null)
+                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                }
+                            })
+                            .show();
+                }
+            });
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
-
 
         return convertView;
     }

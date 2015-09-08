@@ -13,5 +13,12 @@
     <color name="white">#ffffff</color>
     <color name="text_note_book">#333333</color>
     <color name="popup_bg">#c3c0c0</color>
+    <color name="red">#FF3B00</color>
+    <color name="red_press">#990000</color>
 
+    <color name="grey">#C1CDCD</color>
+    <color name="yellow">#ff7300</color>
+    <color name="time_line_bg">#b3b3b3</color>
+    <color name="head_line_bg">#cccccc</color>
+    <color name="holo_blue">#FF33E5B5</color>
 </resources>

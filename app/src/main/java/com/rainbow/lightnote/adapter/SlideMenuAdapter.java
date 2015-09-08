@@ -1,6 +1,7 @@
 package com.rainbow.lightnote.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ public class SlideMenuAdapter extends BaseAdapter {
     private Context context;
     private String[] listItems;
     private LayoutInflater inflater;
-
+    private int selectItem = 1;
     public SlideMenuAdapter(Context context, String[] listItems) {
         this.context = context;
         this.listItems = listItems;
@@ -60,6 +61,12 @@ public class SlideMenuAdapter extends BaseAdapter {
                 viewHolder.tv_menu = (TextView) convertView
                         .findViewById(R.id.tv_menu);
                 viewHolder.tv_menu.setText(listItems[position-1]);
+                if (position == selectItem) {
+                    convertView.setBackgroundColor(context.getResources().getColor(R.color.main_color));
+                }
+                else {
+                    convertView.setBackgroundColor(Color.WHITE);
+                }
                 convertView.setTag(viewHolder);
             }
 
@@ -69,7 +76,9 @@ public class SlideMenuAdapter extends BaseAdapter {
         return convertView;
     }
 
-
+    public  void setSelectItem(int selectItem) {
+        this.selectItem = selectItem;
+    }
     static class ViewHolder {
         public ImageView iv;
         public TextView tv;

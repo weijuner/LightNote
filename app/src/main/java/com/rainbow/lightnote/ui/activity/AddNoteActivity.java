@@ -22,6 +22,8 @@ import me.gujun.android.taggroup.TagGroup;
 public class AddNoteActivity extends Activity implements View.OnClickListener {
     private TextView tv_notebook;
     private ImageButton img_btn_tag;
+    private ImageButton img_btn_back;
+    private ImageButton img_btn_complete;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,11 +35,16 @@ public class AddNoteActivity extends Activity implements View.OnClickListener {
     private void initListener() {
         tv_notebook.setOnClickListener(this);
         img_btn_tag.setOnClickListener(this);
+        img_btn_back.setOnClickListener(this);
+        img_btn_complete.setOnClickListener(this);
+
     }
 
     private void initView() {
         tv_notebook = (TextView)findViewById(R.id.tv_notebook);
         img_btn_tag = (ImageButton)findViewById(R.id.img_btn_tag);
+        img_btn_back = (ImageButton)findViewById(R.id.img_btn_back);
+        img_btn_complete = (ImageButton)findViewById(R.id.img_btn_complete);
     }
 
     private void showPopupWindow(View view) {
@@ -130,6 +137,11 @@ public class AddNoteActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.img_btn_tag:
                 showPopupWindow(tv_notebook);
+                break;
+            case R.id.img_btn_back:
+                finish();
+                break;
+            case R.id.img_btn_complete://完成按钮
                 break;
         }
     }

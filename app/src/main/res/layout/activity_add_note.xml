@@ -12,6 +12,7 @@
         android:background="@color/main_color"
         >
         <ImageButton
+            android:id="@+id/img_btn_back"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/add_not_btn_margin"
@@ -36,6 +37,7 @@
     </RelativeLayout>
     <EditText
         android:hint="笔记标题"
+        android:singleLine="true"
         android:layout_margin="10dp"
         android:textColor="@color/main_color"
         android:layout_width="match_parent"

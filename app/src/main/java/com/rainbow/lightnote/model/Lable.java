@@ -12,6 +12,10 @@ public class Lable {
         this.lableName = lableName;
     }
 
+    public Lable(String lableName) {
+        this.lableName = lableName;
+    }
+
     public int getLabelId() {
         return labelId;
     }

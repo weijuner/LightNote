@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -23,14 +21,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.ikimuhendis.ldrawer.ActionBarDrawerToggle;
 import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 import com.melnykov.fab.FloatingActionButton;
@@ -38,19 +33,24 @@ import com.melnykov.fab.ScrollDirectionListener;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.rainbow.lightnote.R;
-import com.rainbow.lightnote.adapter.SlideMenuAdapter;
 import com.rainbow.lightnote.adapter.CategoryAdapter;
+import com.rainbow.lightnote.adapter.MainViewPageAdapter;
+import com.rainbow.lightnote.adapter.SlideMenuAdapter;
+import com.rainbow.lightnote.adapter.TimeLineAdapter;
 import com.rainbow.lightnote.db.dao.NoteManager;
-import com.rainbow.lightnote.db.dao.UserManager;
 import com.rainbow.lightnote.model.Note;
+import com.rainbow.lightnote.model.TimeLineEntity;
 import com.rainbow.lightnote.model.User;
+import com.rainbow.lightnote.ui.view.JazzyViewPager;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
 import com.yalantis.contextmenu.lib.MenuParams;
+import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
@@ -58,11 +58,11 @@ import cn.bingoogolapple.refreshlayout.BGARefreshLayout.BGARefreshLayoutDelegate
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
 
-public class MainActivity extends FragmentActivity implements BGARefreshLayoutDelegate {
+public class MainActivity extends FragmentActivity implements BGARefreshLayoutDelegate, OnMenuItemClickListener {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    private SwipeMenuListView list;
+    private ListView notelist;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerArrowDrawable drawerArrow;//菜单
     private boolean drawerArrowColor;
@@ -75,84 +75,117 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
     private NoteManager noteManager;
     private  List<Note> notes = new ArrayList<Note>();
     private User user;
+    private SlideMenuAdapter slideAdapter;
+
+
+
+    private JazzyViewPager mJazzy;
+    private List<View> lists = new ArrayList<View>();
+    View catogery;
+    View timeLine;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UserManager userManager = new UserManager(this);
+     /*   UserManager userManager = new UserManager(this);
         User user = new User("zeng","123456");
-        userManager.insertUser(user);
+        userManager.insertUser(user);*/
 
         setContentView(R.layout.activity_main);
         ActionBar ab = getActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setHomeButtonEnabled(true);
-        Log.e("MainActivity", ab.getHeight() + "");
+        initData();
+
+
+
+
+
         fragmentManager = getSupportFragmentManager();
         initMenuFragment();
-        initData();
+
         initView();
         initSlideMenu();
-        initSwipeMenu();
+        initListener();
 
-        String[] values = new String[]{
-            "所有笔记",
-            "笔记分类",
-            "设置", "关于"
-        };
+        setupJazziness(JazzyViewPager.TransitionEffect.RotateDown);
 
-        String[] values2 = new String[]{
-                "所有笔记",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "笔记分类",
-                "设置"
-        };
 
-        list.setAdapter(new CategoryAdapter(this, notes));
-        mDrawerList.setAdapter(new SlideMenuAdapter(this, values));
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                switch (position) {
-                    case 0:
-                        Intent intent = new Intent(MainActivity.this,PersonalInfoActivity.class);
-                        startActivity(intent);
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                }
 
-            }
-        });
+        notelist.setAdapter(new CategoryAdapter(this, notes));
+        mDrawerList.setAdapter(slideAdapter);
+
 
         initRightBottomMenu();
 
         initRefreshLayout(mRefreshLayout);
     }
 
+    /**
+     * 初始化viewPage
+     * @param effect
+     */
+    private void setupJazziness(JazzyViewPager.TransitionEffect effect) {
+        mJazzy.setTransitionEffect(effect);
+        mJazzy.setAdapter(new MainViewPageAdapter(lists, mJazzy));
+        mJazzy.setPageMargin(30);
+    }
+
+    /**
+     * 初始化诶分类监听
+     * @param catogery
+     */
+    private void initCatogeryListener(View catogery) {
+        notelist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, ShowNoteActiviy.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initListener() {
+    //侧滑菜单监听
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                slideAdapter.setSelectItem(position);
+                slideAdapter.notifyDataSetInvalidated();
+
+                switch (position) {
+                    case 0:
+                        Intent intent = new Intent(MainActivity.this, PersonalInfoActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        Intent notebook = new Intent(MainActivity.this, NoteBookActivity.class);
+                        startActivity(notebook);
+                        break;
+                    case 2:
+                        Intent setting = new Intent(MainActivity.this, SettingActivity.class);
+                        startActivity(setting);
+                        break;
+                    case 3:
+                        Intent about = new Intent(MainActivity.this, AboutActivity.class);
+                        startActivity(about);
+                        break;
+                }
+
+            }
+        });
+    }
+
     private void initData() {
+
+        String[] values = new String[]{
+                "笔记本",
+                "设置", "关于"
+        };
+        slideAdapter = new SlideMenuAdapter(this,values);
         Note note = new Note(1,"学习","我的笔记","这是内容","1994-03-12");
         notes.add(note);
-        Note note2 = new Note(1,"生活","生活好难","这是内容","1995-03-12");
+        Note note2 = new Note(1,"生活","生活好难","这是内容", "1995-03-12");
         notes.add(note2);
     }
 
@@ -160,7 +193,7 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
      * 右下角菜单
      */
     private void initRightBottomMenu() {
-        fab.attachToListView(list, new ScrollDirectionListener() {
+        fab.attachToListView(notelist, new ScrollDirectionListener() {
             @Override
             public void onScrollDown() {
                 Log.d("ListViewFragment", "onScrollDown()");
@@ -189,6 +222,15 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         ImageView btn_record_icon = new ImageView(this);
         btn_record_icon.setImageDrawable(getResources().getDrawable(R.drawable.btn_record_menu));
         SubActionButton btn_record = itemBuilder.setContentView(btn_record_icon).build();
+        btn_record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddAaudioNoteActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
 
         SubActionButton.Builder itemBuilder2 = new SubActionButton.Builder(this);
         ImageView btn_picture_icon = new ImageView(this);
@@ -238,50 +280,7 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         });
     }
 
-    /**
-     * listview滑动菜单
-     */
-    private void initSwipeMenu() {
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-                // create "open" item
-                SwipeMenuItem openItem = new SwipeMenuItem(
-                        getApplicationContext());
-                // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE)));
-                // set item width
-                openItem.setWidth(130);
-                // set item title
-                openItem.setTitle("Open");
-           //     openItem.setIcon(R.drawable.ic_favorite);
-                // set item title fontsize
-                openItem.setTitleSize(18);
-                // set item title font color
-                openItem.setTitleColor(Color.WHITE);
-                // add to menu
-                menu.addMenuItem(openItem);
 
-                // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem(
-                        getApplicationContext());
-                // set item background
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE)));
-                // set item width
-                deleteItem.setWidth(130);
-                deleteItem.setTitle("delete");
-                // set a icon
-                      deleteItem.setIcon(R.drawable.ic_delete);
-                // add to menu
-                menu.addMenuItem(deleteItem);
-            }
-        };
-
-// set creator
-        list.setMenuCreator(creator);
-    }
 
     /**
      * 初始化滑动菜单
@@ -318,10 +317,25 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         mRefreshLayout = (BGARefreshLayout)findViewById(R.id.rl_modulename_refresh);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.navdrawer);
-        list = (SwipeMenuListView) findViewById(android.R.id.list);
         fab = (FloatingActionButton)findViewById(R.id.fab);
-    }
+        mJazzy = (JazzyViewPager) findViewById(R.id.jazzy_pager);
 
+        catogery = getLayoutInflater().inflate(R.layout.activity_category, null);
+        lists.add(catogery);
+
+        timeLine = getLayoutInflater().inflate(R.layout.activity_time_line, null);
+        lists.add(timeLine);
+
+        initCatogeryView(catogery);
+        initCatogeryListener(catogery);
+        initExpandListView(timeLine);
+    }
+    /**
+     * 初始化分类控件
+     */
+    private void initCatogeryView(View view){
+        notelist = (ListView) view.findViewById(android.R.id.list);
+    }
     /**
      * 初始化下拉刷新
      * @param refreshLayout
@@ -446,8 +460,6 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
                 BitmapFactory.decodeResource(getResources(), R.drawable.icn_tag));
         tag.setDrawable(bd);
 
-
-
         menuObjects.add(close);
         menuObjects.add(category);
         menuObjects.add(time);
@@ -488,6 +500,105 @@ public class MainActivity extends FragmentActivity implements BGARefreshLayoutDe
         inflater.inflate(R.menu.menu_main, menu);
         return true;
     }
+    @Override
+    public void onMenuItemClick(View clickedView, int position) {
+        switch (position){
+            case 1:
+                mJazzy.setCurrentItem(0);
+                break;
+            case 2:
+                mJazzy.setCurrentItem(1);
+                break;
+        }
+    }
 
+    @Override
+    protected void onResume() {
+       setPageTrasition();
+        super.onResume();
+    }
 
+    /**
+     * 设置过场动画
+     */
+    private void setPageTrasition() {
+        int ram = new Random().nextInt(12);
+        switch (ram){
+            case 0:
+                setupJazziness(JazzyViewPager.TransitionEffect.Standard);
+                break;
+            case 1:
+                setupJazziness(JazzyViewPager.TransitionEffect.Tablet);
+                break;
+            case 2:
+                setupJazziness(JazzyViewPager.TransitionEffect.CubeIn);
+                break;
+            case 3:
+                setupJazziness(JazzyViewPager.TransitionEffect.CubeOut);
+                break;
+            case 4:
+                setupJazziness(JazzyViewPager.TransitionEffect.FlipVertical);
+                break;
+            case 5:
+                setupJazziness(JazzyViewPager.TransitionEffect.FlipHorizontal);
+                break;
+            case 6:
+                setupJazziness(JazzyViewPager.TransitionEffect.Stack);
+                break;
+            case 7:
+                setupJazziness(JazzyViewPager.TransitionEffect.ZoomIn);
+                break;
+            case 8:
+                setupJazziness(JazzyViewPager.TransitionEffect.ZoomOut);
+                break;
+            case 9:
+                setupJazziness(JazzyViewPager.TransitionEffect.RotateUp);
+                break;
+            case 10:
+                setupJazziness(JazzyViewPager.TransitionEffect.RotateDown);
+                break;
+            case 11:
+                setupJazziness(JazzyViewPager.TransitionEffect.Accordion);
+                break;
+        }
+    }
+
+    /**
+     * 初始化可拓展列表
+     */
+    private void initExpandListView(View view) {
+        ExpandableListView timelistView = (ExpandableListView) view.findViewById(R.id.lv_timeline);
+        TimeLineAdapter statusAdapter = new TimeLineAdapter(this, getTimeLineData());
+        timelistView.setAdapter(statusAdapter);
+        timelistView.setGroupIndicator(null); // 去掉默认带的箭头
+        timelistView.setSelection(0);// 设置默认选中项
+
+        // 遍历所有group,将所有项设置成默认展开
+        int groupCount = timelistView.getCount();
+        for (int i = 0; i < groupCount; i++) {
+            timelistView.expandGroup(i);
+        }
+
+        timelistView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v,
+                                        int groupPosition, long id) {
+                // TODO Auto-generated method stub
+                return true;
+            }
+        });
+    }
+    private List<TimeLineEntity> getTimeLineData() {
+        List<TimeLineEntity> timelists;
+        String[] strArray = new String[] { "2015年10月22日", "2015年10月23日", "2015年10月25日" };
+        timelists = new ArrayList<TimeLineEntity>();
+        for (int i = 0; i < strArray.length; i++) {
+            TimeLineEntity timeline = new TimeLineEntity();
+            timeline.setTime(strArray[i]);
+            timeline.setNoteList(notes);
+            timelists.add(timeline);
+        }
+        return timelists;
+    }
 }

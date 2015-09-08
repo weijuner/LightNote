@@ -1,5 +1,7 @@
 package com.rainbow.lightnote.model;
 
+import java.util.List;
+
 /**
  * Created by weijuner on 2015/9/6.
  */
@@ -10,6 +12,7 @@ public class Note {
     String title;//笔记标题
     String content;//笔记内容
     String time;//笔记时间
+    List<Lable> lables;
 
     public Note(int userId,String category, String title, String content, String time) {
         this.userId = userId;
@@ -17,6 +20,14 @@ public class Note {
         this.title = title;
         this.content = content;
         this.time = time;
+    }
+
+    public List<Lable> getLables() {
+        return lables;
+    }
+
+    public void setLables(List<Lable> lables) {
+        this.lables = lables;
     }
 
     public int getUserId() {

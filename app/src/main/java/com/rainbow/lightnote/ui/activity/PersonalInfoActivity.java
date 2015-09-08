@@ -12,8 +12,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -80,7 +82,19 @@ public class PersonalInfoActivity extends Activity{
         });
         popwindowView=getLayoutInflater().inflate(R.layout.popup_choose_img,null,false);
         popWindow=new PopupWindow(popwindowView, ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
-        popwindowView.setBackgroundDrawable(new BitmapDrawable());
+        popWindow.setBackgroundDrawable(new BitmapDrawable());
+        popWindow.setTouchInterceptor(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                Log.i("mengdd", "onTouch : ");
+
+                return false;
+                // 这里如果返回true的话，touch事件将被拦截
+                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
+            }
+        });
         popWindow.setOutsideTouchable(true);
 
         popWin_button_selected = (Button) popwindowView
@@ -116,7 +130,7 @@ public class PersonalInfoActivity extends Activity{
 
     protected void getImageFromAlbum() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");// ��Ƭ����
+        intent.setType("image/*");//
         startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
     }
     protected void getImageFromCamear()
@@ -129,28 +143,23 @@ public class PersonalInfoActivity extends Activity{
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK) { // �˴��� RESULT_OK ��ϵͳ�Զ����һ������
+        if (resultCode != RESULT_OK) { //
             return;
         }
         Bitmap bm = null;
-        // ���ĳ������ContentProvider���ṩ���� ����ͨ��ContentResolver�ӿ�
+
         ContentResolver resolver = getContentResolver();
-        // �˴��������жϽ��յ�Activity�ǲ�������Ҫ���Ǹ�
+
         if (requestCode == REQUEST_CODE_PICK_IMAGE) {
             try {
-                Uri originalUri = data.getData(); // ���ͼƬ��uri
-                bm = MediaStore.Images.Media.getBitmap(resolver, originalUri); // �Եõ�bitmapͼƬ
-                // ���￪ʼ�ĵڶ����֣���ȡͼƬ��·����
+                Uri originalUri = data.getData(); //
+                bm = MediaStore.Images.Media.getBitmap(resolver, originalUri); //
                 String[] proj = { MediaStore.Images.Media.DATA };
-                // ������android��ý�����ݿ�ķ�װ�ӿڣ�����Ŀ�Android�ĵ�
                 Cursor cursor = managedQuery(originalUri, proj, null, null,
                         null);
-                // ���Ҹ������ ����ǻ���û�ѡ���ͼƬ������ֵ
                 int column_index = cursor
                         .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                // �����������ͷ ���������Ҫ����С�ĺ���������Խ��
                 cursor.moveToFirst();
-                // ����������ֵ��ȡͼƬ·��
                 String path = cursor.getString(column_index);
                 Bitmap bt=convertToBitmap(path,100,120);
 
@@ -164,7 +173,6 @@ public class PersonalInfoActivity extends Activity{
     }
 
     public void saveBitmap(Bitmap bm) {
-        //Log.e(TAG, "����ͼƬ");
         File f = new File(PATH+"/LightNote/", "user");
 
         try {
@@ -187,16 +195,13 @@ public class PersonalInfoActivity extends Activity{
 
     public Bitmap convertToBitmap(String path,int w,int h) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
-        // ����Ϊtureֻ��ȡͼƬ��С
         opts.inJustDecodeBounds = true;
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        // ����Ϊ��
         BitmapFactory.decodeFile(path, opts);
         int width = opts.outWidth;
         int height = opts.outHeight;
         float scaleWidth = 0.f, scaleHeight = 0.f;
         if (width > w || height > h) {
-            // ����
             scaleWidth = ((float) width) / w;
             scaleHeight = ((float) height) / h;
         }

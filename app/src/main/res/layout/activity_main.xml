@@ -4,27 +4,22 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <cn.bingoogolapple.refreshlayout.BGARefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/rl_modulename_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-        <com.baoyz.swipemenulistview.SwipeMenuListView
-                    android:id="@android:id/list"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:cacheColorHint="@android:color/transparent"
-                    android:headerDividersEnabled="false"/>
+        <com.rainbow.lightnote.ui.view.JazzyViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/jazzy_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
         </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
         <com.melnykov.fab.FloatingActionButton
             android:id="@+id/fab"
@@ -37,9 +32,8 @@
             fab:fab_colorPressed="@color/accent_pressed"
             fab:fab_colorRipple="@color/ripple"/>
     </FrameLayout>
-
     <!-- The navigation drawer -->
-    <ListView
+    <com.rainbow.lightnote.ui.view.FlexibleListView
         android:id="@+id/navdrawer"
         android:layout_width="@dimen/navdrawer_width"
         android:background="@color/white"
@@ -47,9 +41,8 @@
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
         android:dividerHeight="0dp"
         android:drawSelectorOnTop="false">
-    </ListView>
-
+    </com.rainbow.lightnote.ui.view.FlexibleListView>
 </android.support.v4.widget.DrawerLayout>
-
