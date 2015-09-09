@@ -29,6 +29,7 @@ repositories {
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':PullToRefresh')
     // 记得添加nineoldandroids
     compile 'com.android.support:support-v4:23.0.0'
     compile 'com.ikimuhendis:ldrawer:0.1'
@@ -38,10 +39,10 @@ dependencies {
     compile 'com.yalantis:phoenix:1.2.2'
     compile 'com.yalantis:contextmenu:1.0.4'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'cn.bingoogolapple:bga-refreshlayout:1.0.7@aar'
     compile 'me.gujun.android.taggroup:library:1.4@aar'
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile "com.daimajia.swipelayout:library:1.2.0@aar"
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'cn.pedant.sweetalert:library:1.3'
+    compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
 }

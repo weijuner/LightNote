@@ -14,6 +14,9 @@ public class Note {
     String time;//笔记时间
     List<Lable> lables;
 
+    public Note() {
+    }
+
     public Note(int userId,String category, String title, String content, String time) {
         this.userId = userId;
         this.category = category;
@@ -76,5 +79,12 @@ public class Note {
 
     public void setTime(String time) {
         this.time = time;
+    }
+    public String[] getLableArray(){
+        String[] lableArray = new String[lables.size()];
+        for(int i = 0;i<lables.size();i++){
+            lableArray[i] = lables.get(i).getLableName();
+        }
+        return lableArray;
     }
 }

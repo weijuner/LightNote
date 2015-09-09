@@ -12,15 +12,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.PopupWindow;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rainbow.lightnote.R;
 
@@ -37,7 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class PersonalInfoActivity extends Activity{
 
-    private TextView personalInfo_textview,setting_textview;
+    private EditText person_sex,person_work,person_phone,person_email,person_weibo;
     private CircleImageView profile_circleimageview;
     private PopupWindow popWindow;
     private View popwindowView;
@@ -55,22 +54,45 @@ public class PersonalInfoActivity extends Activity{
 
     public void initView()
     {
-        personalInfo_textview=(TextView)findViewById(R.id.person_info);
-        setting_textview= (TextView) findViewById(R.id.person_set);
         profile_circleimageview= (CircleImageView) findViewById(R.id.profile_image);
+        person_sex= (EditText) findViewById(R.id.person_sex);
+        person_work= (EditText) findViewById(R.id.person_work);
+        person_phone= (EditText) findViewById(R.id.person_phone);
+        person_email= (EditText) findViewById(R.id.person_email);
+        person_weibo= (EditText) findViewById(R.id.person_weibo);
 
-        personalInfo_textview.setOnClickListener(new View.OnClickListener() {
+        person_sex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
-        setting_textview.setOnClickListener(new View.OnClickListener() {
+        person_work.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
+        person_phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        person_email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        person_weibo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
 
         profile_circleimageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,19 +104,7 @@ public class PersonalInfoActivity extends Activity{
         });
         popwindowView=getLayoutInflater().inflate(R.layout.popup_choose_img,null,false);
         popWindow=new PopupWindow(popwindowView, ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
-        popWindow.setBackgroundDrawable(new BitmapDrawable());
-        popWindow.setTouchInterceptor(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                Log.i("mengdd", "onTouch : ");
-
-                return false;
-                // 这里如果返回true的话，touch事件将被拦截
-                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
-            }
-        });
+        popwindowView.setBackgroundDrawable(new BitmapDrawable());
         popWindow.setOutsideTouchable(true);
 
         popWin_button_selected = (Button) popwindowView
@@ -130,7 +140,7 @@ public class PersonalInfoActivity extends Activity{
 
     protected void getImageFromAlbum() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");//
+        intent.setType("image/*");
         startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
     }
     protected void getImageFromCamear()
@@ -143,17 +153,38 @@ public class PersonalInfoActivity extends Activity{
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK) { //
+        if (resultCode != RESULT_OK) {
             return;
         }
         Bitmap bm = null;
-
         ContentResolver resolver = getContentResolver();
-
         if (requestCode == REQUEST_CODE_PICK_IMAGE) {
             try {
-                Uri originalUri = data.getData(); //
-                bm = MediaStore.Images.Media.getBitmap(resolver, originalUri); //
+                bm=null;
+                Uri originalUri = data.getData();
+                bm = MediaStore.Images.Media.getBitmap(resolver, originalUri);
+                String[] proj = { MediaStore.Images.Media.DATA };
+                Cursor cursor = managedQuery(originalUri, proj, null, null,
+                        null);
+                int column_index = cursor
+                        .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                String path = cursor.getString(column_index);
+                Toast.makeText(getBaseContext(),"pick:"+path,Toast.LENGTH_SHORT).show();
+                Bitmap bt=convertToBitmap(path,100,120);
+
+                profile_circleimageview.setImageDrawable(new BitmapDrawable(bt));
+                saveBitmap(bt);
+
+            } catch (IOException e) {
+            }
+        }else if(requestCode==CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE)
+        {
+          //  Bitmap bt=convertToBitmap(path,100,120);
+            bm=null;
+            try {
+                Uri originalUri = data.getData();
+                bm = MediaStore.Images.Media.getBitmap(resolver, originalUri);
                 String[] proj = { MediaStore.Images.Media.DATA };
                 Cursor cursor = managedQuery(originalUri, proj, null, null,
                         null);
@@ -162,25 +193,25 @@ public class PersonalInfoActivity extends Activity{
                 cursor.moveToFirst();
                 String path = cursor.getString(column_index);
                 Bitmap bt=convertToBitmap(path,100,120);
-
+                //Toast.makeText(getBaseContext(),"take:"+path,Toast.LENGTH_SHORT).show();
                 profile_circleimageview.setImageDrawable(new BitmapDrawable(bt));
                 saveBitmap(bt);
 
             } catch (IOException e) {
+                Toast.makeText(getBaseContext(),"Exception",Toast.LENGTH_SHORT).show();
             }
         }
 
     }
 
     public void saveBitmap(Bitmap bm) {
-        File f = new File(PATH+"/LightNote/", "user");
+        File f = new File(PATH+"/LightNote/", "user.jpg");
 
         try {
             FileOutputStream out = new FileOutputStream(f);
             bm.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
             out.close();
-          //  Log.i(TAG, "�Ѿ�����");
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

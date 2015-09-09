@@ -8,19 +8,12 @@
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <cn.bingoogolapple.refreshlayout.BGARefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/rl_modulename_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
         <com.rainbow.lightnote.ui.view.JazzyViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/jazzy_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-        </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
         <com.melnykov.fab.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"

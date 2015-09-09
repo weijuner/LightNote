@@ -186,33 +186,32 @@ public class AddAaudioNoteActivity extends Activity implements View.OnClickListe
 //                Intent it=new Intent(Intent.ACTION_GET_CONTENT);
 //                it.setType("audio/amr");
 //                startActivityForResult(it,RECORD_CODE);
-                if(!ISRECORDING) {
-                    try {
-                        File myRecAudioFile = new File(APPPATH, "new.amr");
-                        mMediaRecorder01 = new MediaRecorder();
-                /* ����¼����ԴΪ��˷� */
-                        mMediaRecorder01.setAudioSource(MediaRecorder.AudioSource.MIC);
-                        mMediaRecorder01.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-                        mMediaRecorder01.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-                        //�ļ�����λ��
-                        mMediaRecorder01.setOutputFile(myRecAudioFile.getAbsolutePath());
-                        mMediaRecorder01.prepare();
-                        mMediaRecorder01.start();
-                        ISRECORDING=true;
-                        ShowRecordingDialog();
-                    } catch (Exception e) {
+                if(IsExistSDCard()) {
+                    if (!ISRECORDING) {
+                        try {
+                            File myRecAudioFile = new File(APPPATH, "new.amr");
+                            mMediaRecorder01 = new MediaRecorder();
+                            mMediaRecorder01.setAudioSource(MediaRecorder.AudioSource.MIC);
+                            mMediaRecorder01.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+                            mMediaRecorder01.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+                            mMediaRecorder01.setOutputFile(myRecAudioFile.getAbsolutePath());
+                            mMediaRecorder01.prepare();
+                            mMediaRecorder01.start();
+                            ISRECORDING = true;
+                            ShowRecordingDialog();
+                        } catch (Exception e) {
 
+                        }
+                    } else {
+                        Toast.makeText(getBaseContext(), "recording...", Toast.LENGTH_SHORT).show();
                     }
                 }else
                 {
-                    Toast.makeText(getBaseContext(),"recording...",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(),"SD card ont exist...",Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.img_recording_res:
                 try {
-
-
-
                     record_img_forward= (ImageButton) view.findViewById(R.id.record_forward_btn);
                     record_img_play= (ImageButton) view.findViewById(R.id.record_play_btn);
                     record_img_next= (ImageButton) view.findViewById(R.id.record_next_btn);
@@ -252,8 +251,6 @@ public class AddAaudioNoteActivity extends Activity implements View.OnClickListe
                                 record_playing_popwindow.dismiss();
                         }
                     });
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -318,6 +315,13 @@ public class AddAaudioNoteActivity extends Activity implements View.OnClickListe
             }
         }
 
+        return false;
+    }
+
+    protected  boolean IsExistSDCard()
+    {
+        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+            return true;
         return false;
     }
 

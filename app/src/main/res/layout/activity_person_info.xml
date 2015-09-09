@@ -3,125 +3,197 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#dcdcdc"
-    tools:context="${relativePackage}.${activityClass}" >
+    android:orientation="vertical"
+    tools:context="${relativePackage}.${activityClass}">
 
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/tool_bar_height"
-        android:orientation="horizontal"
-        android:background="@color/main_color"
-        >
-        <ImageButton
-            android:id="@+id/img_btn_back"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/add_not_btn_margin"
-            android:background="@drawable/selector_addnote_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_centerInParent="true"
-            android:text="个人资料"
-            android:textSize="@dimen/title_bar_text"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
-    <com.rainbow.lightnote.ui.view.OverScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:background="#2fc3f3"
+        android:orientation="horizontal">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_marginTop="15dp"
-        android:layout_gravity="center"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="个人中心"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/title_bar_text" />
+    </LinearLayout>
+    <com.rainbow.lightnote.ui.view.OverScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:orientation="vertical">
+    <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profile_image"
         android:layout_width="96dp"
         android:layout_height="96dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
         android:src="@drawable/user"
-        app:border_width="2dp"
-        app:border_color="#FF000000"/>
+        app:border_color="#FF000000"
+        app:border_width="2dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:gravity="center"
-        android:text="曾天龙"
+        android:text="晴tian鲑鲑"
         android:textColor="#000000"
         android:textSize="20sp" />
-        <LinearLayout
-            android:background="#ffffff"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
 
-            <TextView
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="1dp"
-                android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:text="性别"
-                android:id="@+id/person_info"
+
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp" >
-            </TextView>
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:layout_width="64dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="1dp"
+                    android:gravity="center_vertical"
+                    android:text="性别"
+                    android:textSize="16sp"></TextView>
+                <EditText
+                    android:background="#ffffff"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/person_sex"
+                    android:hint="男"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#dcdcdc"/>
-            <TextView
-                android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:text="工作"
-                android:layout_marginLeft="16dp"
-                android:id="@+id/person_set"
+                android:background="#dcdcdc" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp">
-            </TextView>
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="64dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center_vertical"
+                    android:text="工作"
+                    android:textSize="16sp"></TextView>
+                <EditText
+                    android:background="#ffffff"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/person_work"
+                    android:hint="程序猿"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#dcdcdc"/>
-            <TextView
-                android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:text="电话"
-                android:layout_marginLeft="16dp"
+                android:background="#dcdcdc" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp">
-            </TextView>
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="64dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center_vertical"
+                    android:text="电话"
+                    android:textSize="16sp"></TextView>
+                <EditText
+                    android:background="#ffffff"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/person_phone"
+                    android:hint="15671618881"
+                    android:textSize="16sp"
+                    />
+
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#dcdcdc"/>
-            <TextView
-                android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:text="邮箱"
-                android:layout_marginLeft="16dp"
+                android:background="#dcdcdc" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"/>
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="64dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center_vertical"
+                    android:text="邮箱"
+                    android:textSize="16sp" />
+                <EditText
+                    android:background="#ffffff"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/person_email"
+                    android:hint="965124986@qq.com"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#dcdcdc"/>
-            <TextView
-                android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:text="微博"
-                android:layout_marginLeft="16dp"
+                android:background="#dcdcdc" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp">
-            </TextView>
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="64dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center_vertical"
+                    android:text="微博"
+                    android:textSize="16sp"></TextView>
+                <EditText
+                    android:background="#ffffff"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/person_weibo"
+                    android:hint="点击输入"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
     </com.rainbow.lightnote.ui.view.OverScrollView>
+
 </LinearLayout>

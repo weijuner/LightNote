@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rainbow.lightnote.R;
+import com.rainbow.lightnote.engin.NoteManager;
 import com.rainbow.lightnote.model.Note;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class CategoryAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_category_lv, parent, false);
@@ -68,6 +69,8 @@ public class CategoryAdapter extends BaseAdapter {
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sDialog) {
+                                   new NoteManager().deleteNote(position);
+                                    notifyDataSetInvalidated();
                                     sDialog
                                             .setTitleText("Deleted!")
                                             .setContentText("坏记忆跑掉啦!")
