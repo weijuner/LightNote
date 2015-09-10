@@ -225,6 +225,14 @@ public class MainActivity extends FragmentActivity implements OnMenuItemClickLis
         ImageView btn_picture_icon = new ImageView(this);
         btn_picture_icon.setImageDrawable(getResources().getDrawable(R.drawable.icn_picture));
         SubActionButton btn_picture = itemBuilder2.setContentView(btn_picture_icon).build();
+        btn_picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddImageNoteActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         SubActionButton.Builder itemBuilder3 = new SubActionButton.Builder(this);
         ImageView btn_text_icon = new ImageView(this);
@@ -362,7 +370,7 @@ public class MainActivity extends FragmentActivity implements OnMenuItemClickLis
         // You can set any [color] as divider color:
         // item.setDividerColor(...)
 
-        List<MenuObject> menuObjects = new ArrayList<>();
+        List<MenuObject> menuObjects = new ArrayList();
 
         MenuObject close = new MenuObject();
         close.setResource(R.drawable.icn_close);

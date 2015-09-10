@@ -7,20 +7,28 @@
     android:orientation="vertical"
     tools:context="${relativePackage}.${activityClass}">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/tool_bar_height"
-        android:background="#2fc3f3"
-        android:orientation="horizontal">
-
+        android:orientation="horizontal"
+        android:background="@color/main_color"
+        >
+        <ImageButton
+            android:id="@+id/img_btn_back"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/add_not_btn_margin"
+            android:background="@drawable/selector_addnote_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="个人中心"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/title_bar_text" />
-    </LinearLayout>
+            android:layout_centerInParent="true"
+            android:text="个人信息"
+            android:textSize="@dimen/title_bar_text"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
     <com.rainbow.lightnote.ui.view.OverScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
@@ -28,7 +36,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff"
+            android:background="@color/grey"
             android:orientation="vertical">
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"

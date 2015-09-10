@@ -32,7 +32,7 @@ public class LogRequestForUser
 				conn.setRequestMethod("POST"); //
 				conn.setDoOutput(true); //
 				conn.setDoInput(true); //
-				conn.setUseCaches(false); // ��ʹ�û���
+				conn.setUseCaches(false); //
 				conn.setRequestProperty("Charset", "UTF-8"); //
 			} catch (IOException e) {
 				e.printStackTrace();

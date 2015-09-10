@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 21
     buildToolsVersion "20.0.0"
     defaultConfig {
         applicationId 'com.rainbow.lightnote'
@@ -41,8 +41,10 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'me.gujun.android.taggroup:library:1.4@aar'
     compile 'com.android.support:recyclerview-v7:21.0.0'
-    compile "com.daimajia.swipelayout:library:1.2.0@aar"
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'cn.pedant.sweetalert:library:1.3'
     compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
+    compile project(':share')
+    compile project(':multi-image-selector')
 }

@@ -12,10 +12,13 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.rainbow.lightnote.R;
+import com.rainbow.lightnote.adapter.NoteBookAdapter;
+import com.rainbow.lightnote.engin.CategoryManager;
 import com.rainbow.lightnote.engin.NoteManager;
 import com.rainbow.lightnote.model.Lable;
 import com.rainbow.lightnote.model.Note;
@@ -37,7 +40,7 @@ public class AddNoteActivity extends Activity implements View.OnClickListener {
     private EditText et_notetitle;
     private EditText et_notecontent;
     private Note note;
-    private List<Lable> lables = new ArrayList<>();
+    private List<Lable> lables = new ArrayList();
 
     private TagGroup mTagGroup;
     @Override
@@ -132,6 +135,9 @@ public class AddNoteActivity extends Activity implements View.OnClickListener {
         // 一个自定义的布局，作为显示的内容
         View contentView = LayoutInflater.from(this).inflate(
                 R.layout.popup_note_book, null);
+        ImageButton img_btn_addbook = (ImageButton) contentView.findViewById(R.id.img_btn_addbook);
+        ListView lv_notebook = (ListView) contentView.findViewById(R.id.lv_notebook);
+        lv_notebook.setAdapter(new NoteBookAdapter(this,new CategoryManager().getCategorys()));
         // 设置好参数之后再show
         // 设置按钮的点击事件
 
@@ -170,7 +176,7 @@ public class AddNoteActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.tv_notebook:
+            case R.id.tv_catogary:
                 showNoteBookWindow(tv_catogary);
                 break;
             case R.id.img_btn_tag:

@@ -4,15 +4,30 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageButton;
 
 import com.rainbow.lightnote.R;
 
 public class AboutActivity extends Activity {
-
+    private ImageButton img_btn_back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_about);
+        initView();
+    }
+
+    private void initView() {
+        img_btn_back = (ImageButton) findViewById(R.id.img_btn_back);
+        img_btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

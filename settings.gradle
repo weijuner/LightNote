@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':share', ':multi-image-selector'
 include ':PullToRefresh'

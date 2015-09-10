@@ -2,7 +2,6 @@ package com.rainbow.lightnote.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -15,14 +14,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.dd.CircularProgressButton;
 import com.rainbow.lightnote.R;
+import com.rainbow.lightnote.engin.LoginService;
+import com.rainbow.lightnote.engin.RegisterService;
 
 import java.util.ArrayList;
 
@@ -32,7 +34,8 @@ public class LoginActivity extends Activity {
 	private View LOG, REGEIST;
 	private LayoutInflater inflater;
 	private ArrayList<View> Views = new ArrayList<View>();
-	private Button Log_button, Regeist_button;
+	private CircularProgressButton Log_button;
+	private CircularProgressButton Regeist_button;
 	private EditText Log_Username_edit, Log_Pwd_edit, Regeist_Username_edit,
 			Regeist_Pwd_edit;
 	private CheckBox Log_checkbox, Regeit_checkbox;
@@ -49,7 +52,14 @@ public class LoginActivity extends Activity {
 	void initView() {
 		inflater = getLayoutInflater();
 		LOG = inflater.inflate(R.layout.view_login, null);
+		Log_Username_edit=(EditText) LOG.findViewById(R.id.log_username_edit);
+		Log_Pwd_edit=(EditText) LOG.findViewById(R.id.log_pwd_edit);
+		Log_checkbox=(CheckBox) LOG.findViewById(R.id.log_showpwd_checkbox);
 		REGEIST = inflater.inflate(R.layout.view_regeist, null);
+		Regeist_Username_edit=(EditText) REGEIST.findViewById(R.id.regeist_username_edit);
+		Regeist_Pwd_edit=(EditText) REGEIST.findViewById(R.id.regeist_pwd_edit);
+		Regeit_checkbox=(CheckBox) REGEIST.findViewById(R.id.regeist_showpwd_checkbox);
+
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
 		Views.add(LOG);
 		Views.add(REGEIST);
@@ -57,7 +67,7 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void destroyItem(ViewGroup container, int position,
-					Object object) {
+									Object object) {
 				// TODO Auto-generated method stub
 				super.destroyItem(container, position, object);
 				((ViewPager) container).removeView(Views.get(position));
@@ -130,52 +140,55 @@ public class LoginActivity extends Activity {
 			}
 		});
 
-		Log_button = (Button) LOG.findViewById(R.id.log_button);
-		Regeist_button = (Button) REGEIST.findViewById(R.id.regeist_button);
+		Log_button = (CircularProgressButton) LOG.findViewById(R.id.log_button);
+		Regeist_button = (CircularProgressButton) REGEIST.findViewById(R.id.regeist_button);
 		Log_button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent it=new Intent(LoginActivity.this,MainActivity.class);
-				startActivity(it);
+				if (Log_button.getProgress() == -1) {
+					Log_button.setProgress(0);
+				}
+				String username = Log_Username_edit.getText().toString();
+				String password = Log_Pwd_edit.getText().toString();
+				LoginService.login(LoginActivity.this, Log_button, username, password);
+
 
 			}
 		});
 		Regeist_button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				if (Regeist_button.getProgress() == -1) {
+					Regeist_button.setProgress(0);
+				}
+				String username = Regeist_Username_edit.getText().toString();
+				String password = Regeist_Pwd_edit.getText().toString();
+				Toast.makeText(LoginActivity.this,Regeist_Username_edit.getText().toString(),Toast.LENGTH_LONG).show();
+				RegisterService.register(LoginActivity.this, Regeist_button, username, password);
 			}
 		});
 		
-		Log_Username_edit=(EditText) LOG.findViewById(R.id.log_username_edit);
-		Log_Pwd_edit=(EditText) LOG.findViewById(R.id.log_pwd_edit);
-		Log_checkbox=(CheckBox) LOG.findViewById(R.id.log_showpwd_checkbox);
+
 		Log_checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// TODO Auto-generated method stub
-				if(isChecked)
-				{
+				if (isChecked) {
 					Log_Pwd_edit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-				}else
-				{
+				} else {
 					Log_Pwd_edit.setTransformationMethod(PasswordTransformationMethod.getInstance());
 				}
 			}
 		});
-		
-		Regeist_Username_edit=(EditText) REGEIST.findViewById(R.id.regeist_username_edit);
-		Regeist_Pwd_edit=(EditText) REGEIST.findViewById(R.id.regeist_pwd_edit);
-		Regeit_checkbox=(CheckBox) REGEIST.findViewById(R.id.regeist_showpwd_checkbox);
+
+
 		Regeit_checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// TODO Auto-generated method stub
-				if(isChecked)
-				{
+				if (isChecked) {
 					Regeist_Pwd_edit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-				}else
-				{
+				} else {
 					Regeist_Pwd_edit.setTransformationMethod(PasswordTransformationMethod.getInstance());
 				}
 			}
