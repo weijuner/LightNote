@@ -13,6 +13,8 @@ public class Note {
     String content;//笔记内容
     String time;//笔记时间
     List<Lable> lables;
+    List<String> photo;
+    List<String> record;
 
     public Note() {
     }
@@ -23,6 +25,22 @@ public class Note {
         this.title = title;
         this.content = content;
         this.time = time;
+    }
+
+    public List<String> getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(List<String> photo) {
+        this.photo = photo;
+    }
+
+    public List<String> getRecord() {
+        return record;
+    }
+
+    public void setRecord(List<String> record) {
+        this.record = record;
     }
 
     public List<Lable> getLables() {

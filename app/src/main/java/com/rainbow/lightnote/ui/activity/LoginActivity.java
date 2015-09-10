@@ -19,7 +19,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dd.CircularProgressButton;
 import com.rainbow.lightnote.R;
@@ -163,7 +162,6 @@ public class LoginActivity extends Activity {
 				}
 				String username = Regeist_Username_edit.getText().toString();
 				String password = Regeist_Pwd_edit.getText().toString();
-				Toast.makeText(LoginActivity.this,Regeist_Username_edit.getText().toString(),Toast.LENGTH_LONG).show();
 				RegisterService.register(LoginActivity.this, Regeist_button, username, password);
 			}
 		});

@@ -21,7 +21,7 @@ public class LoginService {
 	private static final String TAG = "LoginService";
 
 	public static void login(final Context context,final CircularProgressButton Log_button,String username,String password){
-		String path = "http://192.168.155.2:8080/wustassistance/servlet/PhoneLoginAction";
+		String path = "http://192.168.191.1:8080/wustassistance/servlet/PhoneLoginAction";
 		boolean result;
 		RequestParams params = new RequestParams();
 		params.addHeader("header", "header");
@@ -47,9 +47,7 @@ public class LoginService {
 
 					@Override
 					public void onStart() {
-						//////////////////////////////////测试
-						Intent it=new Intent(context,MainActivity.class);
-						context.startActivity(it);
+
 					}
 
 					@Override
@@ -75,7 +73,7 @@ public class LoginService {
 
 					@Override
 					public void onFailure(HttpException error, String msg) {
-					//	simulateErrorProgress(Log_button);
+						simulateErrorProgress(Log_button);
 					}
 				});
 	}

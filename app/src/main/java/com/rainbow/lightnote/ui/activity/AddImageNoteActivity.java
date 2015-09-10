@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -24,6 +25,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bm.library.PhotoView;
 import com.rainbow.lightnote.R;
 import com.rainbow.lightnote.engin.NoteManager;
 import com.rainbow.lightnote.model.Lable;
@@ -54,7 +56,7 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
     private int path_size = 1;
 
     private TagGroup mTagGroup;
-    private GridView gridView1;              //������ʾ����ͼ
+    private GridView gridView1;              //
     private ArrayList<HashMap<String, Object>> imageItem;
 
     private SimpleAdapter simpleAdapter;
@@ -76,36 +78,31 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
     protected void initGridView() {
         gridView1 = (GridView) findViewById(R.id.gridView1);
 
-         /*
-29.         * ����Ĭ��ͼƬ���ͼƬ�Ӻ�
-30.         * ͨ��������ʵ��
-31.         * SimpleAdapter����imageItemΪ����Դ R.layout.griditem_addpicΪ����
-32.         */
-        //��ȡ��ԴͼƬ�Ӻ�
+
         bmp = BitmapFactory.decodeResource(getResources(), R.drawable.add_image);
         imageItem = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("itemImage", bmp);
         imageItem.add(map);
+
         simpleAdapter = new SimpleAdapter(this,
                 imageItem, R.layout.view_add_img_griditem,
                 new String[]{"itemImage"}, new int[]{R.id.imageView1});
-        /*
-43.         * HashMap����bmpͼƬ��GridView�в���ʾ,�������������ԴID����ʾ ��
-44.         * map.put("itemImage", R.drawable.img);
-45.         * �������:
-46.         *              1.�Զ���̳�BaseAdapterʵ��
-47.         *              2.ViewBinder()�ӿ�ʵ��
-48.         *  �ο� http://blog.csdn.net/admin_/article/details/7257901
-49.         */
+
         simpleAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Object data,
                                         String textRepresentation) {
                 // TODO Auto-generated method stub
                 if (view instanceof ImageView && data instanceof Bitmap) {
-                    ImageView i = (ImageView) view;
-                    i.setImageBitmap((Bitmap) data);
+                    PhotoView p = new PhotoView(AddImageNoteActivity.this);
+                    p.setLayoutParams(new AbsListView.LayoutParams((int) (getResources().getDisplayMetrics().density * 100), (int) (getResources().getDisplayMetrics().density * 100)));
+                    p.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    p.setImageBitmap((Bitmap) data);
+                    // 把PhotoView当普通的控件把触摸功能关掉
+                    p.disenable();
+              //      ImageView i = (ImageView) view;
+            //        i.setImageBitmap((Bitmap) data);
                     return true;
                 }
                 return false;
@@ -113,10 +110,7 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
         });
         gridView1.setAdapter(simpleAdapter);
 
-        /*
-66.         * ����GridView����¼�
-67.         * ����:�ú���������󷽷� ����Ҫ�ֶ�����import android.view.View;
-68.         */
+
         gridView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -124,12 +118,7 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
                     Toast.makeText(getBaseContext(), "ͼƬ��9������", Toast.LENGTH_SHORT).show();
 
                 } else if (position == path_size - 1) { //���ͼƬλ��Ϊ+ 0��Ӧ0��ͼƬ
-                    // Toast.makeText(MainActivity.this, "���ͼƬ", Toast.LENGTH_SHORT).show();
-                    //ѡ��ͼƬ
-//                    Intent intent = new Intent(Intent.ACTION_PICK,
-//                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                    startActivityForResult(intent, 1);
-                    //ͨ��onResume()ˢ������
+
                     Intent intent = new Intent(getBaseContext(), MultiImageSelectorActivity.class);
 
 // whether show camera
@@ -157,16 +146,13 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
 
     public Bitmap convertToBitmap(String path, int w, int h) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
-        // ����Ϊtureֻ��ȡͼƬ��С
         opts.inJustDecodeBounds = true;
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        // ����Ϊ��
         BitmapFactory.decodeFile(path, opts);
         int width = opts.outWidth;
         int height = opts.outHeight;
         float scaleWidth = 0.f, scaleHeight = 0.f;
         if (width > w || height > h) {
-            // ����
             scaleWidth = ((float) width) / w;
             scaleHeight = ((float) height) / h;
         }
@@ -205,10 +191,8 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
     private List<String> path;
     private boolean first_to_choose = true;
 
-    //��ȡͼƬ·�� ��ӦstartActivityForResult
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //��ͼƬ
         if (resultCode == RESULT_OK && requestCode == 1) {
             // Get the result list of select image paths
             path = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
@@ -232,7 +216,6 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
     }
 
 
-    //ˢ��ͼƬ
 
     @Override
 
@@ -261,7 +244,6 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
         simpleAdapter.notifyDataSetInvalidated();
         gridView1.setAdapter(simpleAdapter);
         // Toast.makeText(getBaseContext(), imageItem.size() + "", Toast.LENGTH_SHORT).show();
-        //ˢ�º��ͷŷ�ֹ�ֻ����ߺ��Զ����
         pathImage = null;
     }
 
@@ -300,12 +282,10 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
         // һ���Զ���Ĳ��֣���Ϊ��ʾ������
         View contentView = LayoutInflater.from(this).inflate(
                 R.layout.popup_tag_view, null);
-        // ���úò���֮����show
 
         mTagGroup = (TagGroup) contentView.findViewById(R.id.tag_group);
         if (null != note.getLables())
             mTagGroup.setTags(note.getLableArray());
-        // ���ð�ť�ĵ���¼�
 
         final PopupWindow popupWindow = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -328,13 +308,9 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
                 Log.i("mengdd", "onTouch : ");
 
                 return false;
-                // �����������true�Ļ���touch�¼���������
-                // ���غ� PopupWindow��onTouchEvent�������ã���������ⲿ�����޷�dismiss
             }
         });
 
-        // ���������PopupWindow�ı����������ǵ���ⲿ������Back�����޷�dismiss����
-        // �Ҿ���������API��һ��bug
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_popup_tag));
 
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
@@ -354,11 +330,8 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
 
     private void showNoteBookWindow(View view) {
 
-        // һ���Զ���Ĳ��֣���Ϊ��ʾ������
         View contentView = LayoutInflater.from(this).inflate(
                 R.layout.popup_note_book, null);
-        // ���úò���֮����show
-        // ���ð�ť�ĵ���¼�
 
         final PopupWindow popupWindow = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -366,10 +339,10 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
 
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
-        int width = metric.widthPixels;  // ��Ļ��ȣ����أ�
-        int height = metric.heightPixels;  // ��Ļ�߶ȣ����أ�
+        int width = metric.widthPixels;  //
+        int height = metric.heightPixels;  //
         popupWindow.setWidth(width - 80);
-        popupWindow.setHeight(height - 400);//���õ������С
+        popupWindow.setHeight(height - 400);//
 
         popupWindow.setTouchable(true);
         popupWindow.setAnimationStyle(R.style.PopupAnimation);
@@ -381,13 +354,9 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
                 Log.i("mengdd", "onTouch : ");
 
                 return false;
-                // �����������true�Ļ���touch�¼���������
-                // ���غ� PopupWindow��onTouchEvent�������ã���������ⲿ�����޷�dismiss
             }
         });
 
-        // ���������PopupWindow�ı����������ǵ���ⲿ������Back�����޷�dismiss����
-        // �Ҿ���������API��һ��bug
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_popup_tag));
 
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
@@ -405,7 +374,7 @@ public class AddImageNoteActivity extends Activity implements View.OnClickListen
             case R.id.img_btn_back:
                 finish();
                 break;
-            case R.id.img_btn_complete://��ɰ�ť
+            case R.id.img_btn_complete://
 
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 Date curDate = new Date(System.currentTimeMillis());//��ȡ��ǰʱ��

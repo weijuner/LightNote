@@ -3,6 +3,7 @@ package com.rainbow.lightnote.engin;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.dd.CircularProgressButton;
@@ -12,12 +13,14 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.rainbow.lightnote.ui.activity.MainActivity;
 
 
 public class RegisterService {
 
 	public static void register(final Context context,final CircularProgressButton btn_register,String username,String password){
-		String path = "http://192.168.155.2:8080/wustassistance/servlet/PhoneRegisterAction";
+		String path = "http:///192.168.191.1:8080/wustassistance/servlet/PhoneRegisterAction";
+		boolean result;
 		RequestParams params = new RequestParams();
 		params.addHeader("header", "header");
 		params.addQueryStringParameter("username", username);
@@ -42,20 +45,25 @@ public class RegisterService {
 
 					@Override
 					public void onStart() {
+
 					}
 
 					@Override
 					public void onLoading(long total, long current, boolean isUploading) {
 						if (isUploading) {
-						//	int progress = (int)(current/total)*100;
+							//	int progress = (int)(current/total)*100;
 						} else {
+
 						}
 					}
 
 					@Override
 					public void onSuccess(ResponseInfo<String> responseInfo) {
-						if(responseInfo.result.equals("注册成功")){
+						if(responseInfo.result.equals("登录成功")){
 							simulateSuccessProgress(btn_register);
+							Intent it=new Intent(context,MainActivity.class);
+							context.startActivity(it);
+
 						}else{
 							simulateErrorProgress(btn_register);
 						}
@@ -63,7 +71,7 @@ public class RegisterService {
 
 					@Override
 					public void onFailure(HttpException error, String msg) {
-
+						simulateErrorProgress(btn_register);
 					}
 				});
 	}
